@@ -1,47 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Header from './components/Header';
+import Board from './components/Board';
+import StatusBar from './components/StatusBar';
+import { useTicTacToe } from './hooks/useTicTacToe';
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * App is the main entry point rendering the Tic Tac Toe game UI using the Ocean Professional theme.
+ */
 function App() {
-  const [theme, setTheme] = useState('light');
-
-  // Effect to apply theme to document element
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
+  const {
+    board,
+    xIsNext,
+    winner,
+    isDraw,
+    winningLine,
+    handleSquareClick,
+    resetGame,
+  } = useTicTacToe();
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-shell">
+      <Header />
+      <main className="main" role="main">
+        <section className="card" aria-label="Tic Tac Toe Game">
+          <StatusBar
+            xIsNext={xIsNext}
+            winner={winner}
+            isDraw={isDraw}
+            onReset={resetGame}
+          />
+          <Board
+            board={board}
+            onPlay={handleSquareClick}
+            winningLine={winningLine}
+            isDisabled={!!winner || isDraw}
+          />
+        </section>
+      </main>
+      <footer className="footer">
+        Ocean Professional UI • Accessible • Keyboard friendly
+      </footer>
     </div>
   );
 }
